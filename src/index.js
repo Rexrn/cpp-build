@@ -2,8 +2,7 @@ const path = require("path");
 
 const submodules = [
 	require("./Exporting"),
-	require("./Building"),
-	require("./Running")
+	require("./Building")
 ];
 
 Object.assign(module.exports, ...submodules);

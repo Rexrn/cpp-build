@@ -25,5 +25,8 @@
   "bugs": {
     "url": "https://github.com/Rexrn/cpp-build/issues"
   },
-  "homepage": "https://github.com/Rexrn/cpp-build#readme"
+  "homepage": "https://github.com/Rexrn/cpp-build#readme",
+  "dependencies": {
+    "yargs": "^15.3.1"
+  }
 }
