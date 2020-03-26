@@ -1,0 +1,26 @@
+{
+  "name": "cpp-build",
+  "version": "0.0.1",
+  "description": "An easy to use C++ meta build system.",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Rexrn/cpp-build.git"
+  },
+  "keywords": [
+    "C++",
+    "build",
+    "system",
+    "easy",
+    "meta"
+  ],
+  "author": "Paweł Syska",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Rexrn/cpp-build/issues"
+  },
+  "homepage": "https://github.com/Rexrn/cpp-build#readme"
+}
