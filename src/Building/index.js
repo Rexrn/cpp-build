@@ -3,21 +3,77 @@ const { GNUMakeGenerator } = require("./Generators");
 const path = require("path");
 const fs = require("fs");
 
-module.exports = {
-	build(scriptAbsolutePath)
+function generate(target, generator)
+{
+	if (target)
 	{
-		let script = require( scriptAbsolutePath );
-
-		// This check is important for JSON projects.
-		if (script && !script.__scriptDirectory)
+		if (Array.isArray(target))
 		{
-			script.__scriptDirectory = path.dirname(scriptAbsolutePath);
+			let prevProcessDirectory = process.cwd();
+
+			for(const subtarget of target)
+			{
+				if (!fs.existsSync(subtarget.name))
+					fs.mkdirSync( subtarget.name );
+				
+				process.chdir( subtarget.name );
+				generate(subtarget, generator);
+				process.chdir(prevProcessDirectory);
+			}
 		}
 
-		const gen = new GNUMakeGenerator();
+		const prevWorkingDirectory = generator.workingDirectory;
+		if (typeof target === "object")
+		{
+			generator.workingDirectory = target.__scriptDirectory;
+		}
 
-		gen.workingDirectory = script.__scriptDirectory;
-		
-		fs.writeFileSync("Makefile", gen.generate(script).content||"");
+		const result = generator.generate(target);
+		fs.writeFileSync("Makefile", result.content || "");
+
+		if (typeof target === "object")
+		{
+			generator.workingDirectory = prevWorkingDirectory;
+		}
 	}
+	else
+		throw "invalid target";
+}
+
+function applyScriptDirectory(target, dir)
+{
+	if (Array.isArray(target))
+	{
+		for(const subtarget of target)
+		{
+			applyScriptDirectory(subtarget, dir);
+		}
+	}
+	else if (typeof target === "object")
+	{
+		if (!target.__scriptDirectory)
+		{
+			target.__scriptDirectory = dir;
+		}
+	}
+}
+
+function build(scriptAbsolutePath)
+{
+	const script = require( scriptAbsolutePath );
+	const scriptDir = path.dirname(scriptAbsolutePath);
+
+	// This check is important for JSON projects.
+	applyScriptDirectory(script, scriptDir);
+	
+	const gen = new GNUMakeGenerator();
+	gen.workingDirectory = scriptDir;
+
+	generate(script, gen);
+}
+
+module.exports = {
+	generate,
+	applyScriptDirectory,
+	build
 }
