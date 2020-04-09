@@ -7,7 +7,8 @@ function generate(target, generator)
 {
 	if (target)
 	{
-		if (Array.isArray(target))
+		const group = Array.isArray(target)
+		if (group)
 		{
 			let prevProcessDirectory = process.cwd();
 
@@ -22,17 +23,17 @@ function generate(target, generator)
 			}
 		}
 
-		const prevWorkingDirectory = generator.workingDirectory;
-		if (typeof target === "object")
+		const g = () => fs.writeFileSync("Makefile", generator.generate(target).content || "");
+
+		if (group)
+			g();
+		else
 		{
+			const prevWorkingDirectory = generator.workingDirectory;
 			generator.workingDirectory = target.__scriptDirectory;
-		}
 
-		const result = generator.generate(target);
-		fs.writeFileSync("Makefile", result.content || "");
+			g();
 
-		if (typeof target === "object")
-		{
 			generator.workingDirectory = prevWorkingDirectory;
 		}
 	}
