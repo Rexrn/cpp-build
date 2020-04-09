@@ -1,4 +1,5 @@
 const { selectCompiler } = require("../../Helper");
+const { TargetType } = require("../../General/TargetType.js");
 
 const path = require("path");
 const fs = require("fs");
@@ -22,22 +23,34 @@ class GNUMakeGenerator
 			].join(" ");
 	}
 
-	static formatIncludeDirectory(projectDir, inc)
+	
+	/**
+	 * Generates GNU Makefile build info for specified target.
+	 * @param {object} target - the target to generate.
+	 */
+	generate(target)
 	{
-		const resolvedDirectory = path.resolve(projectDir, inc);
-		return `"-I${resolvedDirectory}"`;
+		if (typeof target === "object")
+		{
+			// If not set:
+			target.type = target.type || TargetType.Application;
+
+			switch(target.type)
+			{
+			case TargetType.Application:
+				return this.generateApplicationMakefile(target);
+
+			case TargetType.StaticLibrary:
+				return this.generateStaticLibraryMakefile(target);
+
+			default:
+				// TODO: add support for complex file target setups.
+				throw `invalid target type: "${target.type || "unknown"}"`;
+			}
+		}
+		throw "invalid target, valid object required";
 	}
 
-	static formatLinkerDirectory(projectDir, link)
-	{
-		const resolvedDirectory = path.resolve(projectDir, link);
-		return `"-L${resolvedDirectory}"`;
-	}
-
-	static formatLinkedLibrary(lib)
-	{
-		return `"-l${lib}"`;
-	}
 
 	prepareDefaultMakefile(project)
 	{
@@ -75,77 +88,88 @@ class GNUMakeGenerator
 		return content;
 	}
 
-	/**
-	 * Generates GNU Makefile build info for specified target.
-	 * @param {object|string} target - object or string (treated as filename)
-	 */
-	generate(target)
+	generateApplicationMakefile(target)
 	{
-		if (typeof target === "string")
+		const makefilePrefix = this.prepareDefaultMakefile(target);
+
+		let substepsContent = "";
+
+		const buildAllStep = {
+			header: "all:",
+			command: `\t$(CPP) -o ${target.name||"a"} ${this.projectTargetOptions}`
+		};
+
+		for(const file of target.files)
 		{
-			let compilerString = null;
-			
+			const generated = this.generateFileMakefileStep(file);
+			if (generated)
 			{
-				const compilerType = selectCompiler(target);
-
-				if (compilerType == "cpp")
-					compilerString = "$(CPP)";
-				else if (compilerType == "c")
-					compilerString = "$(CC)";
-			}
-
-			// Do not generate build steps for unsupported file types:
-			if (!compilerString)
-			{
-				return null;
-			}
-			
-			const targetAbsolutePath = path.resolve(this.workingDirectory, target);
-			const targetBaseName = path.basename(target);
-
-			// Create build step
-			// TODO: add include folders, etc.
-			return { 
-					type: "step",
-					stepName: targetBaseName,
-					content: `${compilerString} -o ${targetBaseName}.o -c ${targetAbsolutePath} ${this.fileTargetOptions}`
-				};
-		}
-		else if (typeof target === "object")
-		{
-			if (target.type === "application")
-			{
-				// 
-				const makefilePrefix = this.prepareDefaultMakefile(target);
-
-				let substepsContent = "";
-
-				const buildAllStep = {
-					header: "all:",
-					command: `\t$(CPP) -o ${target.name||"a"} ${this.projectTargetOptions}`
-				};
-				for(const f of target.files)
-				{
-					const fGen = this.generate(f);
-					if (fGen)
-					{
-						buildAllStep.header += " " + fGen.stepName;
-						buildAllStep.command += " " + fGen.stepName + ".o";
-						substepsContent += `\n${fGen.stepName}:\n\t${fGen.content}`;
-					}
-				}
-				
-
-				return {
-					type: "makefile",
-					content: `${makefilePrefix}\n\n${buildAllStep.header}\n${buildAllStep.command}\n\n${substepsContent}`
-				};
-			}
-			else
-			{
-				throw `invalid target type: "${target.type || "unknown"}"`;
+				buildAllStep.header += " " + generated.stepName;
+				buildAllStep.command += " " + generated.stepName + ".o";
+				substepsContent += `\n${generated.stepName}:\n\t${generated.content}`;
 			}
 		}
+
+		return {
+				type: "makefile",
+				content: `${makefilePrefix}\n\n${buildAllStep.header}\n${buildAllStep.command}\n\n${substepsContent}`
+			};
+	}
+
+	generateStaticLibraryMakefile(target)
+	{
+		throw "not supported";
+	}
+
+	generateFileMakefileStep(target)
+	{
+		let compilerString = null;
+			
+		{
+			const compilerType = selectCompiler(target);
+
+			if (compilerType == "cpp")
+				compilerString = "$(CPP)";
+			else if (compilerType == "c")
+				compilerString = "$(CC)";
+		}
+
+		// Do not generate build steps for unsupported file types:
+		if (!compilerString)
+		{
+			return null;
+		}
+		
+		const targetAbsolutePath = path.resolve(this.workingDirectory, target);
+		const targetBaseName = path.basename(target);
+
+		// Create build step
+		// TODO: add include folders, etc.
+		return { 
+				type: "step",
+				stepName: targetBaseName,
+				content: `${compilerString} -o ${targetBaseName}.o -c ${targetAbsolutePath} ${this.fileTargetOptions}`
+			};
+	}
+
+
+	static formatIncludeDirectory(projectDir, inc)
+	{
+		const resolvedDirectory = path.resolve(projectDir, inc);
+		return `"-I${resolvedDirectory}"`;
+	}
+
+
+	static formatLinkerDirectory(projectDir, link)
+	{
+		const resolvedDirectory = path.resolve(projectDir, link);
+		return `"-L${resolvedDirectory}"`;
+	}
+
+
+	static formatLinkedLibrary(lib)
+	{
+		return `"-l${lib}"`;
 	}
 }
 

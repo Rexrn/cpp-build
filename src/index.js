@@ -1,7 +1,6 @@
-const path = require("path");
-
 const submodules = [
 	require("./Exporting"),
+	require("./General"),
 	require("./Building")
 ];
 
