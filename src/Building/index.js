@@ -75,6 +75,5 @@ function build(scriptAbsolutePath)
 
 module.exports = {
 	generate,
-	applyScriptDirectory,
 	build
 }
