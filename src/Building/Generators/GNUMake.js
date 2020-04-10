@@ -123,7 +123,7 @@ class GNUMakeGenerator
 
 		let buildAllCmd = "";
 		if (library)
-			buildAllCmd = `\t$(ARCHIVER) rs ${target.name||"a"} ${this.projectTargetOptions}`
+			buildAllCmd = `\t$(ARCHIVER) rs ${target.name||"a"}`
 		else
 			buildAllCmd = `\t$(CPP) -o ${target.name||"a"} ${this.projectTargetOptions}`
 
