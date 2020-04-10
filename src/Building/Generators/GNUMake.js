@@ -104,7 +104,7 @@ class GNUMakeGenerator
 		}
 
 		// Linked libraries:
-		if (project.type === TargetType.StaticLibrary)
+		if (project.type === TargetType.Application)
 		{
 			content += "PROJECT_LINKED_LIBRARIES="
 			if (Array.isArray(project.linkedLibraries))
