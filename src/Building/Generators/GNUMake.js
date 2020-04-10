@@ -182,7 +182,7 @@ class GNUMakeGenerator
 		return { 
 				type: "step",
 				stepName: targetBaseName,
-				content: `${compilerString} -o ${targetBaseName}.o -c ${targetAbsolutePath} ${this.fileTargetOptions}`
+				content: `${compilerString} -o ${targetBaseName}.o ${this.fileTargetOptions} -c ${targetAbsolutePath}`
 			};
 	}
 
