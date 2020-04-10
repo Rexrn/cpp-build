@@ -96,7 +96,7 @@ class GNUMakeGenerator
 		// Linker directories:
 		{
 			const fmt = (dir) => GNUMakeGenerator.formatLinkerDirectory(project.__scriptDirectory, dir);
-			
+
 			content += "PROJECT_LINKER_DIRECTORIES="
 			content += accesses(project.linkerDirectories).map( fmt ).join(" ");
 			content += "\n";
@@ -184,11 +184,13 @@ class GNUMakeGenerator
 				content: `${compilerString} -o ${targetBaseName}.o ${this.fileTargetOptions} -c ${targetAbsolutePath}`
 			};
 	}
+	
 
 	predictOutputPath(target)
 	{
 		return path.resolve(process.cwd(), target.name, target.name);
 	}
+
 
 	static formatIncludeDirectory(projectDir, inc)
 	{
@@ -201,12 +203,6 @@ class GNUMakeGenerator
 	{
 		const resolvedDirectory = path.resolve(projectDir, link);
 		return `"-L${resolvedDirectory}"`;
-	}
-
-
-	static formatLinkedLibrary(lib)
-	{
-		return `"-l${lib}"`;
 	}
 }
 
