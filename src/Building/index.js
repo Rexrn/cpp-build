@@ -1,7 +1,37 @@
 const { GNUMakeGenerator } = require("./Generators");
+const { TargetType } = require("../General/TargetType");
 
 const path = require("path");
 const fs = require("fs");
+
+function link(target, toTarget, generator)
+{
+	if (toTarget)
+	{
+		if (Array.isArray(toTarget.publicIncludeDirectories))
+		{
+			target.includeDirectiories = target.includeDirectiories.concat(toTarget.publicIncludeDirectories);
+		}
+
+		if (Array.isArray(toTarget.publicLinkerDirectories))
+		{
+			target.linkerDirectiories = target.linkerDirectiories.concat(toTarget.publicLinkerDirectories);
+		}
+
+		if (Array.isArray(toTarget.publicLinkerOptions))
+		{
+			target.linkerOptions = target.linkerOptions.concat(toTarget.publicLinkerOptions);
+		}
+
+		if (toTarget.type === TargetType.StaticLibrary)
+		{
+			const p = generator.predictOutputPath(toTarget);
+
+			target.link.push(p);
+		}
+	}
+	
+}
 
 function generate(target, generator)
 {
@@ -59,6 +89,37 @@ function applyScriptDirectory(target, dir)
 	}
 }
 
+function resolveLinks(targets, generator)
+{
+	for(const t of targets)
+	{
+		if (Array.isArray(t.link))
+		{
+			const prevLinks = t.link;
+			t.link = [];
+			for(const l of prevLinks)
+			{
+				const toTarget = targets.find(e => e.name == l);
+
+				if (toTarget)
+					link(t, toTarget, generator);
+				else
+					t.link.push(l); // raw
+			}
+		}
+	}
+}
+
+function makeProjectConformant(project)
+{
+	const ensureArray = a => Array.isArray(a) ? a : [];
+
+	project.includeDirectiories = ensureArray(project.includeDirectiories);
+	project.linkerDirectories 	= ensureArray(project.linkerDirectories);
+	project.linkerOptions		= ensureArray(project.linkerOptions);
+	project.link 				= ensureArray(project.link);
+}
+
 function build(scriptAbsolutePath)
 {
 	const script = require( scriptAbsolutePath );
@@ -69,6 +130,14 @@ function build(scriptAbsolutePath)
 	
 	const gen = new GNUMakeGenerator();
 	gen.workingDirectory = scriptDir;
+
+	if (Array.isArray(script))
+	{
+		for(const p of script)
+			makeProjectConformant(p);
+
+		resolveLinks(script, gen);
+	}
 
 	generate(script, gen);
 }

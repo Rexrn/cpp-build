@@ -19,6 +19,7 @@ class GNUMakeGenerator
 				"$(PROJECT_LINKER_DIRECTORIES)"
 			].join(" ");
 		this.projectTargetOptions = [
+				"$(PROJECT_LINKER_OPTIONS)",
 				"$(PROJECT_LINKED_LIBRARIES)"
 			].join(" ");
 	}
@@ -106,11 +107,18 @@ class GNUMakeGenerator
 		// Linked libraries:
 		if (project.type === TargetType.Application)
 		{
-			content += "PROJECT_LINKED_LIBRARIES="
-			if (Array.isArray(project.linkedLibraries))
+			content += "PROJECT_LINKER_OPTIONS="
+			if (Array.isArray(project.linkerOptions))
 			{
 				const fmt = (dir) => GNUMakeGenerator.formatLinkedLibrary(dir);
-				content += project.linkedLibraries.map( fmt ).join(" ");
+				content += project.linkerOptions.map( e => `"-l${e}"` ).join(" ");
+			}
+			content += "\n";
+
+			content += "PROJECT_LINKED_LIBRARIES="
+			if (Array.isArray(project.link))
+			{
+				content += project.link.map( e => `"${e}"` ).join(" ");
 			}
 			content += "\n";
 		}
@@ -186,6 +194,10 @@ class GNUMakeGenerator
 			};
 	}
 
+	predictOutputPath(target)
+	{
+		return path.resolve(process.cwd(), target.name, target.name);
+	}
 
 	static formatIncludeDirectory(projectDir, inc)
 	{
