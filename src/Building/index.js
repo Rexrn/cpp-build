@@ -4,24 +4,21 @@ const { TargetType } = require("../General/TargetType");
 const path = require("path");
 const fs = require("fs");
 
-function link(target, toTarget, generator)
+function link(target, toTarget, generator, private = true)
 {
 	if (toTarget)
 	{
-		if (Array.isArray(toTarget.publicIncludeDirectories))
-		{
-			target.includeDirectiories = target.includeDirectiories.concat(toTarget.publicIncludeDirectories);
-		}
+		const merge = (dst, src, priv) => {
+				const fromSrc = [ ...src.interface, ...src.public ];
+				if (priv)
+					dst.private = [ ...dst.private, ...fromSrc ];
+				else
+					dst.public = [ ...dst.public, ...fromSrc ];
+			};
 
-		if (Array.isArray(toTarget.publicLinkerDirectories))
-		{
-			target.linkerDirectiories = target.linkerDirectiories.concat(toTarget.publicLinkerDirectories);
-		}
-
-		if (Array.isArray(toTarget.publicLinkerOptions))
-		{
-			target.linkerOptions = target.linkerOptions.concat(toTarget.publicLinkerOptions);
-		}
+		merge(target.includeDirectories, toTarget.includeDirectories, private);
+		merge(target.linkerDirectories, toTarget.linkerDirectories, private);
+		merge(target.linkerOptions, toTarget.linkerOptions, private);
 
 		if (toTarget.type === TargetType.StaticLibrary)
 		{
@@ -30,7 +27,6 @@ function link(target, toTarget, generator)
 			target.link.push(p);
 		}
 	}
-	
 }
 
 function generate(target, generator)
@@ -113,11 +109,20 @@ function resolveLinks(targets, generator)
 function makeProjectConformant(project)
 {
 	const ensureArray = a => Array.isArray(a) ? a : [];
+	const ensureArrayTriple = a => {
+			a.public 	= ensureArray(a.public);
+			a.private 	= ensureArray(a.private);
+			a.interface = ensureArray(a.interface);
+		};
 
-	project.includeDirectiories = ensureArray(project.includeDirectiories);
-	project.linkerDirectories 	= ensureArray(project.linkerDirectories);
-	project.linkerOptions		= ensureArray(project.linkerOptions);
-	project.link 				= ensureArray(project.link);
+	project.includeDirectories 	= project.includeDirectories || {};
+	project.linkerDirectories 	= project.linkerDirectories || {};
+	project.linkerOptions 		= project.linkerOptions || {};
+		
+	ensureArrayTriple(project.includeDirectories);
+	ensureArrayTriple(project.linkerDirectories);
+	ensureArrayTriple(project.linkerOptions);
+	project.link = ensureArray(project.link);
 }
 
 function build(scriptAbsolutePath)
