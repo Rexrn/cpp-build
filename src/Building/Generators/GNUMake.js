@@ -42,7 +42,7 @@ class GNUMakeGenerator
 			{
 			case TargetType.Application:
 			case TargetType.StaticLibrary:
-				return this.generateMakefile(project);
+				return this.generateProjectMakefile(project);
 
 			default:
 				throw `invalid target type: "${project.type || "unknown"}"`;
@@ -71,7 +71,7 @@ class GNUMakeGenerator
 	}
 
 
-	generateMakefile(project)
+	generateProjectMakefile(project)
 	{
 		const library = project.type === TargetType.StaticLibrary;
 		const makefilePrefix = this.prepareDefaultMakefile(project);
