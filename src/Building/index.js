@@ -8,16 +8,26 @@ function link(target, toTarget, generator, private = true)
 {
 	if (toTarget)
 	{
-		const merge = (dst, src, priv) => {
+		const merge = (dst, src, priv, modify) => {
 				const fromSrc = [ ...src.interface, ...src.public ];
+
+				if (modify)
+				{
+					for(let i in fromSrc) {
+						fromSrc[i] = modify(fromSrc[i]);
+					}
+				}
+				
 				if (priv)
 					dst.private = [ ...dst.private, ...fromSrc ];
 				else
 					dst.public = [ ...dst.public, ...fromSrc ];
 			};
 
-		merge(target.includeDirectories, toTarget.includeDirectories, private);
-		merge(target.linkerDirectories, toTarget.linkerDirectories, private);
+		const resolvePath = p => path.resolve(toTarget.__scriptDirectory, p);
+
+		merge(target.includeDirectories, toTarget.includeDirectories, private, resolvePath);
+		merge(target.linkerDirectories, toTarget.linkerDirectories, private, resolvePath);
 		merge(target.linkerOptions, toTarget.linkerOptions, private);
 
 		if (toTarget.type === TargetType.StaticLibrary)
