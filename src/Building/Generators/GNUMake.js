@@ -26,26 +26,26 @@ class GNUMakeGenerator
 	
 	/**
 	 * Generates GNU Makefile build info for specified target.
-	 * @param {object} target - the target to generate.
+	 * @param {object} project - the target to generate.
 	 */
-	generate(target)
+	generate(project)
 	{
-		if (Array.isArray(target))
+		if (Array.isArray(project))
 		{
-			return this.generateGroupMakefile(target);
+			return this.generateGroupMakefile(project);
 		}
-		else if (typeof target === "object")
+		else if (typeof project === "object")
 		{
-			target.type = target.type || TargetType.Application;
+			project.type = project.type || TargetType.Application;
 
-			switch(target.type)
+			switch(project.type)
 			{
 			case TargetType.Application:
 			case TargetType.StaticLibrary:
-				return this.generateMakefile(target);
+				return this.generateMakefile(project);
 
 			default:
-				throw `invalid target type: "${target.type || "unknown"}"`;
+				throw `invalid target type: "${project.type || "unknown"}"`;
 			}
 		}
 		throw "invalid target, valid object required";
@@ -71,25 +71,28 @@ class GNUMakeGenerator
 	}
 
 
-	generateMakefile(target)
+	generateMakefile(project)
 	{
-		const library = target.type === TargetType.StaticLibrary;
-		const makefilePrefix = this.prepareDefaultMakefile(target);
+		const library = project.type === TargetType.StaticLibrary;
+		const makefilePrefix = this.prepareDefaultMakefile(project);
 
 		let substepsContent = "";
 
 		let buildAllCmd = "";
-		if (library)
-			buildAllCmd = `\t$(ARCHIVER) rs ${target.name}`
-		else
-			buildAllCmd = `\t$(CPP) -o ${target.name} ${this.projectTargetOptions}`
+
+		if (library) {
+			buildAllCmd = `\t$(ARCHIVER) rs ${project.name}`
+		}
+		else {
+			buildAllCmd = `\t$(CPP) -o ${project.name} ${this.projectTargetOptions}`
+		}
 
 		const buildAllStep = {
-			header: "all:",
-			command: buildAllCmd
-		};
+				header: "all:",
+				command: buildAllCmd
+			};
 
-		for(const file of target.files)
+		for(const file of project.files)
 		{
 			const generated = this.generateFileMakefileStep(file);
 			if (generated)
