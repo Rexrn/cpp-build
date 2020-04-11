@@ -8,12 +8,12 @@ class GNUMakeGenerator
 {
 	constructor()
 	{
-		this.workingDirectory = "";
+		this.workingDirectory 	= "";
 
-		this.cppCompilerCmd = "g++";
-		this.cCompilerCmd = "gcc";
-		this.makeProgram = "make";
-		this.archiveProgram = "ar";
+		this.cppCompilerCmd 	= "g++";
+		this.cCompilerCmd 		= "gcc";
+		this.makeProgram 		= "make";
+		this.archiveProgram 	= "ar";
 		this.fileTargetOptions = [
 				"$(PROJECT_INCLUDE_DIRECTORIES)",
 				"$(PROJECT_LINKER_DIRECTORIES)"
@@ -52,11 +52,11 @@ class GNUMakeGenerator
 	}
 
 
-	generateGroupMakefile(target)
+	generateGroupMakefile(groupProject)
 	{
 		let subtargets = "";
 		let fileContents = "";
-		for(const subtarget of target)
+		for(const subtarget of groupProject)
 		{
 			subtargets += `subtarget_${subtarget.name} `;
 			fileContents += `subtarget_${subtarget.name}: ${subtarget.name}/Makefile\n`;
@@ -111,12 +111,12 @@ class GNUMakeGenerator
 
 
 
-	generateFileMakefileStep(target)
+	generateFileMakefileStep(fileTarget)
 	{
 		let compilerString = null;
 			
 		{
-			const compilerType = selectCompiler(target);
+			const compilerType = selectCompiler(fileTarget);
 
 			if (compilerType == "cpp")
 				compilerString = "$(CPP)";
@@ -130,8 +130,8 @@ class GNUMakeGenerator
 			return null;
 		}
 		
-		const targetAbsolutePath = path.resolve(this.workingDirectory, target);
-		const targetBaseName = path.basename(target);
+		const targetAbsolutePath = path.resolve(this.workingDirectory, fileTarget);
+		const targetBaseName = path.basename(fileTarget);
 
 		// Create build step
 		// TODO: add include folders, etc.
@@ -194,9 +194,9 @@ class GNUMakeGenerator
 	}
 	
 
-	predictOutputPath(target)
+	predictOutputPath(project)
 	{
-		return path.resolve(process.cwd(), target.name, target.name);
+		return path.resolve(process.cwd(), project.name, project.name);
 	}
 
 
