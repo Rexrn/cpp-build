@@ -80,9 +80,9 @@ class GNUMakeGenerator
 
 		let buildAllCmd = "";
 		if (library)
-			buildAllCmd = `\t$(ARCHIVER) rs ${target.name||"a"}`
+			buildAllCmd = `\t$(ARCHIVER) rs ${target.name}`
 		else
-			buildAllCmd = `\t$(CPP) -o ${target.name||"a"} ${this.projectTargetOptions}`
+			buildAllCmd = `\t$(CPP) -o ${target.name} ${this.projectTargetOptions}`
 
 		const buildAllStep = {
 			header: "all:",
