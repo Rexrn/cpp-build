@@ -33,7 +33,7 @@ that contains following info about your project:
 
 Project.json:
 
-```json
+```js
 {
 	"name": "HelloWorld",
 	"type": "application",
@@ -75,7 +75,7 @@ Project.json
 
 The `Project.json` would look like this:
 
-```json
+```js
 [
 	{
 		"name": "GameEngine",
