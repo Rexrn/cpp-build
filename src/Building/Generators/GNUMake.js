@@ -16,10 +16,11 @@ class GNUMakeGenerator
 		this.archiveProgram 	= "ar";
 		this.fileTargetOptions = [
 				"$(PROJECT_INCLUDE_DIRECTORIES)",
-				"$(PROJECT_LINKER_DIRECTORIES)"
+				"$(PROJECT_CPP_COMPILE_FLAGS)"
 			].join(" ");
-		this.projectTargetOptions = [
-				"$(PROJECT_LINKER_OPTIONS)",
+			this.projectTargetOptions = [
+				"$(PROJECT_LINKER_DIRECTORIES)",
+				"$(PROJECT_LINKER_FLAGS)",
 				"$(PROJECT_LINKED_LIBRARIES)"
 			].join(" ");
 	}
@@ -168,21 +169,34 @@ class GNUMakeGenerator
 			content += mergeAccesses(project.includeDirectories).map( fmt ).join(" ");
 			content += "\n";
 		}
-			
-		// Linker directories:
+
+		// Compile flags directories:
+		{
+			content += "PROJECT_CPP_COMPILER_FLAGS="
+			content += mergeAccesses(project.compilerFlags).map(e => `"${e}"`).join(" ");
+			content += "\n";
+
+			// TODO: add support for C compiler flags
+		}
+
+		// Definitions:
+		{
+			content += "PROJECT_DEFINITIONS="
+			content += mergeAccesses(project.definitions).map(e => `"-D${e}"`).join(" ");
+			content += "\n";
+		}
+
+		// Linker:
+		if (project.type === TargetType.Application)
 		{
 			const fmt = (dir) => GNUMakeGenerator.formatLinkerDirectory(project.__scriptDirectory, dir);
 
 			content += "PROJECT_LINKER_DIRECTORIES="
 			content += mergeAccesses(project.linkerDirectories).map( fmt ).join(" ");
 			content += "\n";
-		}
 
-		// Linked libraries:
-		if (project.type === TargetType.Application)
-		{
-			content += "PROJECT_LINKER_OPTIONS="
-			content += mergeAccesses(project.linkerOptions).map( e => `"-l${e}"` ).join(" ");
+			content += "PROJECT_LINKER_FLAGS="
+			content += mergeAccesses(project.linkerFlags).map( e => `"-l${e}"` ).join(" ");
 			content += "\n";
 
 			content += "PROJECT_LINKED_LIBRARIES="

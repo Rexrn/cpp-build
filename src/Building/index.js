@@ -1,4 +1,5 @@
 const { GNUMakeGenerator } = require("./Generators");
+
 const { TargetType } = require("../General/TargetType");
 
 const path = require("path");
@@ -17,7 +18,7 @@ function link(target, toTarget, generator, private = true)
 						fromSrc[i] = modify(fromSrc[i]);
 					}
 				}
-				
+
 				if (priv)
 					dst.private = [ ...dst.private, ...fromSrc ];
 				else
@@ -28,7 +29,9 @@ function link(target, toTarget, generator, private = true)
 
 		merge(target.includeDirectories, toTarget.includeDirectories, private, resolvePath);
 		merge(target.linkerDirectories, toTarget.linkerDirectories, private, resolvePath);
-		merge(target.linkerOptions, toTarget.linkerOptions, private);
+		merge(target.compilerFlags, toTarget.compilerFlags, private);
+		merge(target.definitions, toTarget.definitions, private);
+		merge(target.linkerFlags, toTarget.linkerFlags, private);
 
 		if (toTarget.type === TargetType.StaticLibrary)
 		{
@@ -119,20 +122,26 @@ function resolveLinks(targets, generator)
 function makeProjectConformant(project)
 {
 	const ensureArray = a => Array.isArray(a) ? a : [];
-	const ensureArrayTriple = a => {
+	const ensureAccessesArray = a => {
+
+			a = a || {};
+
+			if (Array.isArray(a))
+				a = { private: a };
+
 			a.public 	= ensureArray(a.public);
 			a.private 	= ensureArray(a.private);
 			a.interface = ensureArray(a.interface);
+
+			return a;
 		};
 
-	project.includeDirectories 	= project.includeDirectories || {};
-	project.linkerDirectories 	= project.linkerDirectories || {};
-	project.linkerOptions 		= project.linkerOptions || {};
-		
-	ensureArrayTriple(project.includeDirectories);
-	ensureArrayTriple(project.linkerDirectories);
-	ensureArrayTriple(project.linkerOptions);
-	project.link = ensureArray(project.link);
+	project.includeDirectories 	= ensureAccessesArray(project.includeDirectories);
+	project.linkerDirectories 	= ensureAccessesArray(project.linkerDirectories);
+	project.compilerFlags 		= ensureAccessesArray(project.compilerFlags);
+	project.definitions 		= ensureAccessesArray(project.definitions);
+	project.linkerFlags 		= ensureAccessesArray(project.linkerFlags);
+	project.link 				= ensureArray(project.link);
 }
 
 function build(scriptAbsolutePath)
