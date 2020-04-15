@@ -84,10 +84,10 @@ class GNUMakeGenerator
 		let buildAllCmd = "";
 
 		if (library) {
-			buildAllCmd = `\t$(ARCHIVER) rs ${project.name}`
+			buildAllCmd = `\t$(ARCHIVER) rs ${project.name}.a`
 		}
 		else {
-			buildAllCmd = `\t$(CPP) -o ${project.name} ${this.projectTargetOptions}`
+			buildAllCmd = `\t$(CPP) -o ${project.name}`
 		}
 
 		const buildAllStep = {
@@ -108,7 +108,7 @@ class GNUMakeGenerator
 
 		return {
 				type: "makefile",
-				content: `${makefilePrefix}\n\n${buildAllStep.header}\n${buildAllStep.command}\n\n${substepsContent}`
+				content: `${makefilePrefix}\n\n${buildAllStep.header}\n${buildAllStep.command} ${this.projectTargetOptions}\n\n${substepsContent}`
 			};
 	}
 
@@ -141,7 +141,7 @@ class GNUMakeGenerator
 		return { 
 				type: "step",
 				stepName: targetBaseName,
-				content: `${compilerString} -o ${targetBaseName}.o ${this.fileTargetOptions} -c ${targetAbsolutePath}`
+				content: `${compilerString} -o ${targetBaseName}.o -c "${targetAbsolutePath}" ${this.fileTargetOptions}`
 			};
 	}
 
@@ -212,7 +212,12 @@ class GNUMakeGenerator
 
 	predictOutputPath(project)
 	{
-		return path.resolve(process.cwd(), project.name, project.name);
+		let outPath = path.resolve(process.cwd(), project.name, project.name);
+
+		if (project.type == TargetType.StaticLibrary)
+			outPath += ".a";
+		
+		return outPath;
 	}
 
 
