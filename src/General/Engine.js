@@ -116,6 +116,18 @@ function loadBuildScript(scriptPath)
 	return script;
 }
 
+function flatten2dArray(array2d)
+{
+	const flattenedArray = [];
+
+	for(const a of array2d)
+	{
+		flattenedArray.push(...a);
+	}
+
+	return flattenedArray;
+}
+
 class CppBuildEngine
 {
 	constructor()
@@ -139,7 +151,7 @@ class CppBuildEngine
 
 		this.resolveLinks(generator);
 		const buildQueue = this.setupBuildQueue();
-		this.generateBuildFiles(this.projects, generator);
+		this.generateBuildFiles(flatten2dArray(buildQueue), generator);
 	}
 
 	setupBuildQueue()
