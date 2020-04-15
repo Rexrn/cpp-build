@@ -60,7 +60,9 @@ class GNUMakeGenerator
 		for(const subtarget of groupProject)
 		{
 			subtargets += `subtarget_${subtarget.name} `;
-			fileContents += `subtarget_${subtarget.name}: ${subtarget.name}/Makefile\n`;
+			fileContents += `subtarget_${subtarget.name}: `;
+			fileContents += subtarget.dependsOn.map(e => `subtarget_${e.name}`).join(" ");
+			fileContents += ` ${subtarget.name}/Makefile\n`;
 			fileContents += `\t${this.makeProgram} -C ${subtarget.name}\n`;
 		}
 		fileContents = `all: ${subtargets}\n${fileContents}`;
@@ -163,7 +165,7 @@ class GNUMakeGenerator
 
 		// Include directories:
 		{
-			const fmt = (dir) => GNUMakeGenerator.formatIncludeDirectory(project.__scriptDirectory, dir);
+			const fmt = (dir) => GNUMakeGenerator.formatIncludeDirectory(path.dirname(project.__scriptPath), dir);
 
 			content += "PROJECT_INCLUDE_DIRECTORIES="
 			content += mergeAccesses(project.includeDirectories).map( fmt ).join(" ");
@@ -189,7 +191,7 @@ class GNUMakeGenerator
 		// Linker:
 		if (project.type === TargetType.Application)
 		{
-			const fmt = (dir) => GNUMakeGenerator.formatLinkerDirectory(project.__scriptDirectory, dir);
+			const fmt = (dir) => GNUMakeGenerator.formatLinkerDirectory(path.dirname(project.__scriptPath), dir);
 
 			content += "PROJECT_LINKER_DIRECTORIES="
 			content += mergeAccesses(project.linkerDirectories).map( fmt ).join(" ");

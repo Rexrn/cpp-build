@@ -11,7 +11,7 @@ module.exports = {
 			.demandCommand(1, "Error: no file specified!")
 			.argv;
 
-		try
+		//try
 		{
 			const targetPath = argv._[0];
 
@@ -22,9 +22,9 @@ module.exports = {
 
 			console.error(`# cpp-build process finished (success).`);
 		}
-		catch(exc)
-		{
-			console.error(`# cpp-build process finished (failure, reason: "${exc}")`);
-		}
+		// catch(exc)
+		// {
+		// 	console.error(`# cpp-build process finished (failure, reason: "${exc}")`);
+		// }
 	}
 };

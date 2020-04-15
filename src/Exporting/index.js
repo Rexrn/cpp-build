@@ -6,7 +6,7 @@ module.exports = {
 			theModule.exports = {
 				type: "application",
 				files: [ target ],
-				__scriptDirectory: theModule.path
+				__scriptPath: theModule.path
 			};
 		}
 		else
