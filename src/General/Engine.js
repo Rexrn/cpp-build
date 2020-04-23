@@ -56,7 +56,7 @@ function makeProjectConformant(project)
 			project.link[idx] = { name: l, src: project.__scriptPath };
 		else
 		{
-			project.link[idx].src = path.resolve(path.dirname(project.__scriptPath), project.link[idx].src);
+			// project.link[idx].src = path.resolve(path.dirname(project.__scriptPath), project.link[idx].src);
 		}
 	}
 }
@@ -101,9 +101,11 @@ function link(target, toTarget, generator, private = true)
 
 function loadBuildScript(scriptPath)
 {
-	const script = require(scriptPath);
+	const resolved = require.resolve(scriptPath);
 
-	applyScriptPath(script, scriptPath);
+	const script = require(resolved);
+	
+	applyScriptPath(script, resolved);
 
 	if (Array.isArray(script))
 	{
@@ -251,11 +253,12 @@ class CppBuildEngine
 
 		for(const l of project.link)
 		{
-			const dep = this.loadDependency(l.name, l.src);
+			const dep = this.loadDependency(l.name, l.src, path.dirname(project.__scriptPath));
 		
 			if (!dep)
 				throw `could not load link: "${l.name}" (from "${l.src}")`;
 
+			l.ref = dep;
 			this.storeProject(dep);
 		}
 	}
@@ -267,9 +270,9 @@ class CppBuildEngine
 			const prevLinks = p.link;
 			p.link = [];
 			p.dependsOn = [];
-			for(let l of prevLinks)
+			for(const l of prevLinks)
 			{
-				const toTarget = this.projects.find(e => compareProjects(e, { name: l.name, __scriptPath: l.src } ));
+				const toTarget = l.ref;
 
 				if (toTarget)
 				{
@@ -288,7 +291,13 @@ class CppBuildEngine
 		const resolvedPath = path.resolve(context, src);
 
 		try {
-			const script = loadBuildScript(resolvedPath);
+			let script = null;
+			try {
+				script = loadBuildScript(resolvedPath);
+			}
+			catch(e) {
+				script = loadBuildScript(src);
+			}
 
 			if (Array.isArray(script))
 			{
