@@ -16,7 +16,8 @@ class GNUMakeGenerator
 		this.archiveProgram 	= "ar";
 		this.fileTargetOptions = [
 				"$(PROJECT_INCLUDE_DIRECTORIES)",
-				"$(PROJECT_CPP_COMPILE_FLAGS)"
+				"$(PROJECT_CPP_COMPILE_FLAGS)",
+				"$(PROJECT_DEFINITIONS)"
 			].join(" ");
 			this.projectTargetOptions = [
 				"$(PROJECT_LINKER_DIRECTORIES)",
@@ -42,6 +43,7 @@ class GNUMakeGenerator
 			switch(project.type)
 			{
 			case TargetType.Application:
+			case TargetType.Interface:
 			case TargetType.StaticLibrary:
 				return this.generateProjectMakefile(project);
 
@@ -76,6 +78,15 @@ class GNUMakeGenerator
 
 	generateProjectMakefile(project)
 	{
+		// TODO: improve this.
+		if (project.type === TargetType.Interface)
+		{
+			return {
+				type: "makefile",
+				content: `all:\n\techo "INTERFACE PROJECT \"${project.name}\" SETUP DONE"`	
+			};
+		}
+
 		const library = project.type === TargetType.StaticLibrary;
 		const makefilePrefix = this.prepareDefaultMakefile(project);
 
