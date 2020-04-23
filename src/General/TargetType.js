@@ -1,6 +1,6 @@
 module.exports = {
 	TargetType: {
-		Empty: "empty",
+		Interface: "interface",
 		Application: "application",
 		StaticLibrary: "static library",
 		DynamicLibrary: "dynamic library"
