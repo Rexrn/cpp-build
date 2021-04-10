@@ -65,7 +65,7 @@ int main()
 
 and a `Project.build.json` file with following content:
 
-```json
+```js
 {
 	"name": "MyApp",
 	"type": "application",

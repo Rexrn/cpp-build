@@ -13,7 +13,7 @@ that contains the following info about your project:
 
 Lets name it `Project.build.json:`
 
-```json
+```js
 {
 	"name": "HelloWorld",
 	"type": "application",
