@@ -13,29 +13,23 @@ not implemented yet. Do not use this software for now.**
 	Setup your projects easily with <a href="https://en.wikipedia.org/wiki/JSON#Syntax">JSON</a> files or a <a href="https://en.wikipedia.org/wiki/JavaScript">JavaScript</a> code.
 	<br>
 	<br>
-	<a href="https://nodejs.org" target="_blank">
+	<a href="https://nodejs.org">
 		<img src="resources/nodejs-logo.svg" alt="NodeJS Logo">
 	</a>
-	<a href="https://premake.github.io/" target="_blank">
+	<a href="https://premake.github.io/">
 		<img src="resources/premake-logo.png" alt="Premake5 Logo">
 	</a>
-
-
 </p>
 <br/>
+<br/>
 
-<table align="center">
-	<tr>
-		<td><a href="#installation">Installation</a></td>
-		<td><a href="#quick-start">Quick Start</a></td>
-		<td><a href="#contributing">Contributing</a></td>
-	</tr>
-	<tr>
-		<td><a href="#goals">Goals</a></td>
-		<td><a href="#examples">Examples</a></td>
-		<td><a href="#documentation">Documentation</a></td>
-	</tr>
-</table>
+## Menu
+
+<a href="#installation"><img src="resources/icons/arrow-down.svg"/></a> | [Installation](#installation) | <a href="#quick-start"><img src="resources/icons/run-all.svg"/></a>|[Quick Start](#quick-start) | <a href="#examples"><img src="resources/icons/note.svg"/></a>|[Examples](#examples)
+:------: | :------ | :------: | :------ | :------: | :------
+<a href="#documentation"><img src="resources/icons/repo.svg"/></a>|[**Documentation**](#documentation) | <a href="#goals"><img src="resources/icons/question.svg"/></a>|[**Goals**](#goals) | <a href="#contributing"><img src="resources/icons/organization.svg"/></a> |[**Contributing**](#contributing)
+
+<br/>
 
 ## Installation
 
