@@ -52,7 +52,7 @@ Congratulations. You can now use **CppBuild**.
 
 ## Quick start
 
-Create a folder with basic C++ Hello World code inside `Main.cpp`:
+Create a folder with a basic C++ Hello World code inside `Main.cpp`:
 
 ```cpp
 #include <iostream>
@@ -63,7 +63,7 @@ int main()
 }
 ```
 
-with `Project.build.json` file inside:
+and a `Project.build.json` file with following content:
 
 ```json
 {
