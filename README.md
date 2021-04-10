@@ -127,8 +127,6 @@ Please wait for the first alpha release.
 
 ## 🙋‍♂️Author
 
-Made by Paweł Syska.
+Made by **Paweł Syska**.
 
-
-
-
+- Icons: https://github.com/microsoft/vscode-icons
