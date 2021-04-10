@@ -52,6 +52,9 @@ Congratulations. You can now use **CppBuild**.
 
 ## Quick start
 
+
+### 1. Hello World Code
+
 Create a folder with a basic C++ Hello World code inside `Main.cpp`:
 
 ```cpp
@@ -62,6 +65,8 @@ int main()
 	std::cout << "Hello, World!";
 }
 ```
+
+### 2. Build instructions
 
 and a `Project.build.json` file with following content:
 
@@ -76,6 +81,8 @@ and a `Project.build.json` file with following content:
 ```
 > **Note:**  
 > If you're not familiar with JSON file format, checkout [this page](https://en.wikipedia.org/wiki/JSON#Syntax)
+
+### 3. Build from command line
 
 Now build entire application with following command:
 
