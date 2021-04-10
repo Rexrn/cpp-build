@@ -10,39 +10,32 @@ not implemented yet. Do not use this software for now.**
 	A free and easy to use C++ meta-build system based on <a href="https://nodejs.org">NodeJS</a> that leverage <a href="https://premake.github.io/">Premake5</a> as project generator.
 	</b>
 	<br>
+	Setup your projects easily with <a href="https://en.wikipedia.org/wiki/JSON#Syntax">JSON</a> files or a <a href="https://en.wikipedia.org/wiki/JavaScript">JavaScript</a> code.
+	<br>
+	<br>
 	<a href="https://nodejs.org" target="_blank">
-		<img src="resources/nodejs-logo.svg" alt="NodeJS Logo" style="margin: 20px 30px;">
+		<img src="resources/nodejs-logo.svg" alt="NodeJS Logo">
 	</a>
 	<a href="https://premake.github.io/" target="_blank">
-		<img src="resources/premake-logo.png" alt="Premake5 Logo" style="margin: 20px 30px;">
+		<img src="resources/premake-logo.png" alt="Premake5 Logo">
 	</a>
-	
-Setup your projects easily with <a href="https://en.wikipedia.org/wiki/JSON#Syntax">JSON</a> files or a <a href="https://en.wikipedia.org/wiki/JavaScript">JavaScript</a> code.
+
+
 </p>
 <br/>
 
 <table align="center">
 	<tr>
-		<td>Installation</td>
-		<td>Quick Start</td>
-		<td>Contributing</td>
+		<td><a href="#installation">Installation</a></td>
+		<td><a href="#quick-start">Quick Start</a></td>
+		<td><a href="#contributing">Contributing</a></td>
 	</tr>
 	<tr>
-		<td>Goals</td>
-		<td>Examples</td>
-		<td>Documentation</td>
+		<td><a href="#goals">Goals</a></td>
+		<td><a href="#examples">Examples</a></td>
+		<td><a href="#documentation">Documentation</a></td>
 	</tr>
 </table>
-
-|[Installation](#installation)|[Quick Start](#quick-start)|[Contributing](#contributing)|
-|:---:|:---:|:---:|
-|[**Goals**](#goals)|[**Examples**](Examples/index.md)|[**Documentation**](Documentation/index.md)|
-
-
-
-
-
-
 
 ## Installation
 
