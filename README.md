@@ -105,12 +105,20 @@ Explaination:
 
 ## Motivation
 
-TODO.
+Premake5 itself does not provide an easy way to modularize code.
+Each workspace is on its own with configuration, which means that
+adding a library is always going to add unnecessary complexity.
+There are workarounds to solve this problem, but they are not as easy
+and satisfactory.
+
+There are also other build (and meta-build) systems, but in my opinion,
+those are also too complex. A build tool should be as easy to use as possible.
+  
 
 
 ## Contributing
 
-
+For now, contributing is closed. Please wait for the first alpha release.
 
 ## Author
 
