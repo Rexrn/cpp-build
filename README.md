@@ -3,39 +3,36 @@
 **Warning: things described in this README are mostly
 not implemented yet. Do not use this software for now.**
 
-<center>
-<img src="resources/logo-big.svg">
-<br/>
-<big>
-A free and easy to use C++ meta-build system based on <a href="https://nodejs.org">NodeJS</a> that leverage <a href="https://premake.github.io/">Premake5</a> as project generator.
-</big>
-<br>
-<a href="https://nodejs.org" target="_blank">
-	<img src="resources/nodejs-logo.svg" alt="NodeJS Logo" style="margin: 20px 30px;">
-</a>
-<a href="https://premake.github.io/" target="_blank">
-	<img src="resources/premake-logo.png" alt="Premake5 Logo" style="margin: 20px 30px;">
-</a>
-
-
+<p align="center">
+	<img src="resources/logo-big.svg">
+	<br/>
+	<b>
+	A free and easy to use C++ meta-build system based on <a href="https://nodejs.org">NodeJS</a> that leverage <a href="https://premake.github.io/">Premake5</a> as project generator.
+	</b>
+	<br>
+	<a href="https://nodejs.org" target="_blank">
+		<img src="resources/nodejs-logo.svg" alt="NodeJS Logo" style="margin: 20px 30px;">
+	</a>
+	<a href="https://premake.github.io/" target="_blank">
+		<img src="resources/premake-logo.png" alt="Premake5 Logo" style="margin: 20px 30px;">
+	</a>
+	
 Setup your projects easily with <a href="https://en.wikipedia.org/wiki/JSON#Syntax">JSON</a> files or a <a href="https://en.wikipedia.org/wiki/JavaScript">JavaScript</a> code.
-</center>
+</p>
 <br/>
 
-<center>
-	<table>
-		<tr>
-			<td>Installation</td>
-			<td>Quick Start</td>
-			<td>Contributing</td>
-		</tr>
-		<tr>
-			<td>Goals</td>
-			<td>Examples</td>
-			<td>Documentation</td>
-		</tr>
-	</table>
-</center>
+<table align="center">
+	<tr>
+		<td>Installation</td>
+		<td>Quick Start</td>
+		<td>Contributing</td>
+	</tr>
+	<tr>
+		<td>Goals</td>
+		<td>Examples</td>
+		<td>Documentation</td>
+	</tr>
+</table>
 
 |[Installation](#installation)|[Quick Start](#quick-start)|[Contributing](#contributing)|
 |:---:|:---:|:---:|
