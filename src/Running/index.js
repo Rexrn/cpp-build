@@ -19,7 +19,7 @@ function runBuild(args)
 
 		build( path.resolve(process.cwd(), args.target) );
 
-		
+
 		console.log(`# cpp-build process finished (success).`);
 	}
 	catch(exc)
@@ -63,8 +63,8 @@ module.exports = {
 	run()
 	{
 		const targetOption = {
-				type: 			"string",
-				describe: 		"path to the targets build script/json"
+				type: 		"string",
+				describe: 	"path to the targets build script/json"
 			};
 
 		const argv = 

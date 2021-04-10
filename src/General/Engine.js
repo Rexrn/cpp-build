@@ -99,9 +99,21 @@ function link(target, toTarget, generator, private = true)
 }
 
 
-function loadBuildScript(scriptPath)
+function loadBuildScript(path, additionalPath = undefined)
 {
-	const resolved = require.resolve(scriptPath);
+	let resolved;
+	try {
+		let paths;
+		if (additionalPath !== undefined)
+			paths = [additionalPath, ...module.paths];
+		else
+			paths = module.paths;
+
+		resolved = require.resolve(path, { paths: paths });
+	}
+	catch(exc) {
+		throw exc;
+	}
 
 	const script = require(resolved);
 	
@@ -114,7 +126,6 @@ function loadBuildScript(scriptPath)
 	}
 	else
 		makeProjectConformant(script);
-
 	return script;
 }
 
@@ -254,7 +265,6 @@ class CppBuildEngine
 		for(const l of project.link)
 		{
 			const dep = this.loadDependency(l.name, l.src, path.dirname(project.__scriptPath));
-		
 			if (!dep)
 				throw `could not load link: "${l.name}" (from "${l.src}")`;
 
@@ -293,10 +303,10 @@ class CppBuildEngine
 		try {
 			let script = null;
 			try {
-				script = loadBuildScript(resolvedPath);
+				script = loadBuildScript(resolvedPath, context);
 			}
 			catch(e) {
-				script = loadBuildScript(src);
+				script = loadBuildScript(src, context);
 			}
 
 			if (Array.isArray(script))
