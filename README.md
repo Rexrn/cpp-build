@@ -39,7 +39,7 @@ not implemented yet. Do not use this software for now.**
 
 <br/>
 
-## ⬇️ Installation 
+## ⬇️Installation 
 
 Download [Node.js](https://nodejs.org), then install `CppBuild` package like this:
 
@@ -50,7 +50,7 @@ npm install -g github:Rexrn/CppBuild
 Congratulations. You can now use **CppBuild**.
 
 
-## ⏩ Quick start
+## ⏩Quick start
 
 
 ### 1. Hello World Code
@@ -101,14 +101,14 @@ Explaination:
 
 **For next steps reach out to our [Examples](docs/Examples.md) page.**
 
-## ⚽ Goals
+## ⚽Goals
 
 - Be as easy to use and understand as possible (JSON file format)
 - Support complex scripting if necessary (Node.js JavaScript support)
 - Support library autoconfiguration
 - Serve a lot of useful tutorials (for now, see [Examples](docs/Examples.md))
 
-## 🏃‍♂️ Motivation
+## 🏃‍♂️Motivation
 
 Premake5 itself does not provide an easy way to modularize code.
 Each workspace is on its own with configuration, which means that
@@ -121,11 +121,11 @@ those are also too complex. A build tool should be as easy to use as possible.
   
 
 
-## 🌱 Contributing
+## 🌱Contributing
 
 Please wait for the first alpha release.
 
-## 🙋‍♂️ Author
+## 🙋‍♂️Author
 
 Made by Paweł Syska.
 
