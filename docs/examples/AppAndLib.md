@@ -1,4 +1,4 @@
-## Examples
+# Application and a library | [Examples](../Examples.md)
 
 
 Lets say that you create a Game and a Game Engine project.
