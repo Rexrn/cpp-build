@@ -7,7 +7,7 @@ not implemented yet. Do not use this software for now.**
 	<img src="resources/logo-big.svg">
 	<br/>
 	<b>
-	A free and easy to use C++ meta-build system based on <a href="https://nodejs.org">Node.js</a> that leverage <a href="https://premake.github.io/">Premake5</a> as project generator.
+	A free and easy to use build tool for C++ based on <a href="https://nodejs.org">Node.js</a> that leverage <a href="https://premake.github.io/">Premake5</a> as project generator.
 	</b>
 	<br>
 	Setup your projects easily with <a href="https://en.wikipedia.org/wiki/JSON#Syntax">JSON</a> files or a <a href="https://en.wikipedia.org/wiki/JavaScript">JavaScript</a> code.
