@@ -1,4 +1,4 @@
-# Examples | [CppBuild](../README.md)
+# Examples | [CppBuild](..)
 
 The best way to introduce someone to a tool is through
 some examples. Lets see how to use CppBuild:
@@ -26,4 +26,4 @@ some examples. Lets see how to use CppBuild:
 > **TODO:**  
 > Provide more examples 
 
-## [<-- Back](../README.md)
+## [<-- Back](..)
