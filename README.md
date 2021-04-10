@@ -1,12 +1,61 @@
-# cpp-build
-
-A free and easy to use C++ meta-build system based on Node.js.
-
-Setup your projects easily with JSON files or a JavaScript code.
+# CppBuild
 
 **Warning: things described in this README are mostly
 not implemented yet. Do not use this software for now.**
 
+<center>
+<img src="resources/logo-big.svg">
+<br/>
+<big>
+A free and easy to use C++ meta-build system based on <a href="https://nodejs.org">NodeJS</a> that leverage <a href="https://premake.github.io/">Premake5</a> as project generator.
+</big>
+<br>
+<a href="https://nodejs.org" target="_blank">
+	<img src="resources/nodejs-logo.svg" alt="NodeJS Logo" style="margin: 20px 30px;">
+</a>
+<a href="https://premake.github.io/" target="_blank">
+	<img src="resources/premake-logo.png" alt="Premake5 Logo" style="margin: 20px 30px;">
+</a>
+
+
+Setup your projects easily with <a href="https://en.wikipedia.org/wiki/JSON#Syntax">JSON</a> files or a <a href="https://en.wikipedia.org/wiki/JavaScript">JavaScript</a> code.
+</center>
+<br/>
+
+<center>
+	<table>
+		<tr>
+			<td>Installation</td>
+			<td>Quick Start</td>
+			<td>Contributing</td>
+		</tr>
+		<tr>
+			<td>Goals</td>
+			<td>Examples</td>
+			<td>Documentation</td>
+		</tr>
+	</table>
+</center>
+
+|[Installation](#installation)|[Quick Start](#quick-start)|[Contributing](#contributing)|
+|:---:|:---:|:---:|
+|[**Goals**](#goals)|[**Examples**](Examples/index.md)|[**Documentation**](Documentation/index.md)|
+
+
+
+
+
+
+
+## Installation
+
+Download [Node.js](https://nodejs.org), then install `CppBuild` package like this:
+
+```bash
+npm install -g github:Rexrn/CppBuild
+```
+
+Congratulations. You can now use **CppBuild**.
 ## Examples
 
 The best way to introduce someone to a tool is through
@@ -114,15 +163,10 @@ will inherit that configuration.
 
 TODO.
 
-## Installation
 
-Download Node.js, then install `cpp-build` package like this:
+## Contributing
 
-```bash
-npm install -g github:Rexrn/cpp-build
-```
 
-Congratulations. You can now use **CppBuild**.
 
 ## Author
 
