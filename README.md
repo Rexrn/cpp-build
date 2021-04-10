@@ -25,14 +25,14 @@ not implemented yet. Do not use this software for now.**
 
 <table align="center">
 	<tr>
-		<td><a href="#installation">	<img src="resources/icons/arrow-down.svg"/>		Installation</a>	</td>
-		<td><a href="#quick-start">		<img src="resources/icons/run-all.svg"/>		Quick Start</a>		</td>
-		<td><a href="#examples">		<img src="resources/icons/note.svg"/>			Examples</a>			</td>
+		<td valign="center"><a href="#installation">	<img src="resources/icons/arrow-down.svg"/>		Installation</a>	</td>
+		<td valign="center"><a href="#quick-start">		<img src="resources/icons/run-all.svg"/>		Quick Start</a>		</td>
+		<td valign="center"><a href="#examples">		<img src="resources/icons/note.svg"/>			Examples</a>			</td>
 	</tr>
 	<tr>
-		<td><a href="#documentation">	<img src="resources/icons/repo.svg"/>			Documentation</a>	</td>
-		<td><a href="#goals">			<img src="resources/icons/question.svg"/>		Goals</a>					</td>
-		<td><a href="#contributing">	<img src="resources/icons/organization.svg"/>	Contributing</a>	</td>
+		<td valign="center"><a href="#documentation">	<img src="resources/icons/repo.svg"/>			Documentation</a>	</td>
+		<td valign="center"><a href="#goals">			<img src="resources/icons/question.svg"/>		Goals</a>					</td>
+		<td valign="center"><a href="#contributing">	<img src="resources/icons/organization.svg"/>	Contributing</a>	</td>
 	</tr>
 </table>
 
