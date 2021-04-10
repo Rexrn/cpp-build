@@ -99,7 +99,7 @@ Explaination:
 
 <br>
 
-**For next steps reach out to our [Tutorials](docs/Tutorials.md) page.**
+**For next steps reach out to our [Examples](docs/Examples.md) page.**
 
 
 
