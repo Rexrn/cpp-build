@@ -101,7 +101,12 @@ Explaination:
 
 **For next steps reach out to our [Examples](docs/Examples.md) page.**
 
+## Goals
 
+- Be as easy to use and understand as possible (JSON file format)
+- Support complex scripting if necessary (Node.js JavaScript support)
+- Support library autoconfiguration
+- Serve a lot of useful tutorials (for now, see [Examples](docs/Examples.md))
 
 ## Motivation
 
@@ -118,7 +123,7 @@ those are also too complex. A build tool should be as easy to use as possible.
 
 ## Contributing
 
-For now, contributing is closed. Please wait for the first alpha release.
+Please wait for the first alpha release.
 
 ## Author
 
