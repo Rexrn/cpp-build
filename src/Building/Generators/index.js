@@ -1,5 +1,4 @@
-Object.assign(module.exports,
-		...[
-			require("./GNUMake")
-		]
-	);
+module.exports = {
+	...require("./GNUMake"),
+	...require("./Premake5")
+};

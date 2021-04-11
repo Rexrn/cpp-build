@@ -1,4 +1,4 @@
-const { GNUMakeGenerator } = require("./Generators");
+const { GNUMakeGenerator, Premake5Generator } = require("./Generators");
 
 const {
 	CppBuildEngine
@@ -8,7 +8,7 @@ const path = require("path");
 
 function build(scriptAbsolutePath)
 {	
-	const gen = new GNUMakeGenerator();
+	const gen = new Premake5Generator();
 	gen.workingDirectory = path.dirname(scriptAbsolutePath);
 
 	const engine = new CppBuildEngine();

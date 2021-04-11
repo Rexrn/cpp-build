@@ -3,11 +3,40 @@ const { TargetType } = require("./TargetType");
 const path = require("path");
 const fs = require("fs");
 
+// TODO: move this to other file.
+/**
+ * Flattens two dimensional array and returns the flattened one.
+ * @param {*} array2d 
+ * @returns The flattened array.
+ */
+ function flatten2dArray(array2d)
+ {
+	 const flattenedArray = [];
+ 
+	 for(const a of array2d)
+	 {
+		 flattenedArray.push(...a);
+	 }
+ 
+	 return flattenedArray;
+ }
+
+/**
+ * Compare whether two projects are identical (in terms of the name and source location).
+ * @param {*} lhs first project
+ * @param {*} rhs second project
+ * @returns true if identical, otherwise false
+ */
 function compareProjects(lhs, rhs)
 {
 	return lhs.name == rhs.name && lhs.__scriptPath == rhs.__scriptPath;
 }
 
+/**
+ * Makes sure that the project (and each subproject) havs information about source script it's coming from.
+ * @param {*} project 
+ * @param {*} scriptPath 
+ */
 function applyScriptPath(project, scriptPath)
 {
 	if (Array.isArray(project))
@@ -26,6 +55,11 @@ function applyScriptPath(project, scriptPath)
 	}
 }
 
+/**
+ * Makes sure that the project object is in right format to be processed by CppBuild.
+ * Ensures required fields exist, etc.
+ * @param {*} project 
+ */
 function makeProjectConformant(project)
 {
 	const ensureArray = a => Array.isArray(a) ? a : [];
@@ -61,37 +95,53 @@ function makeProjectConformant(project)
 	}
 }
 
-function link(target, toTarget, generator, private = true)
+/**
+ * Merges project field (dst) with values copied from a dependency (src).
+ * 
+ * @param {*} dst 				- project field
+ * @param {*} src 				- dependency field
+ * @param {*} priv 				- whether to merge in private mode (dependency is private)
+ * @param {*} sourceValModifier - each value from the dependency is modified by this function (1 param - value)
+ */
+function mergeField(dst, src, priv, sourceValModifier)
 {
-	if (toTarget)
+	const fromSrc = [ ...src.interface, ...src.public ];
+
+	if (sourceValModifier)
 	{
-		const merge = (dst, src, priv, modify) => {
-				const fromSrc = [ ...src.interface, ...src.public ];
+		for(let i in fromSrc) {
+			fromSrc[i] = sourceValModifier(fromSrc[i]);
+		}
+	}
 
-				if (modify)
-				{
-					for(let i in fromSrc) {
-						fromSrc[i] = modify(fromSrc[i]);
-					}
-				}
+	if (priv)
+		dst.private = [ ...dst.private, ...fromSrc ];
+	else
+		dst.public = [ ...dst.public, ...fromSrc ];
+}
 
-				if (priv)
-					dst.private = [ ...dst.private, ...fromSrc ];
-				else
-					dst.public = [ ...dst.public, ...fromSrc ];
-			};
+/**
+ * Adds `dependency` to `target`. Merges exposed fields if needed. 
+ * @param {*} target 		- target that uses dependency
+ * @param {*} dependency 	- dependency to be added
+ * @param {*} generator 	- reference to a generator
+ * @param {*} private 		- whether dependency is private (not propagated when something depends on `target`)
+ */
+function link(target, dependency, generator, private = true)
+{
+	if (dependency)
+	{
+		const resolvePath = p => path.resolve(path.dirname(dependency.__scriptPath), p);
 
-		const resolvePath = p => path.resolve(path.dirname(toTarget.__scriptPath), p);
+		mergeField(target.includeDirectories, 	dependency.includeDirectories, 	private, resolvePath);
+		mergeField(target.linkerDirectories, 	dependency.linkerDirectories, 	private, resolvePath);
+		mergeField(target.compilerFlags, 		dependency.compilerFlags, 		private);
+		mergeField(target.definitions, 			dependency.definitions, 		private);
+		mergeField(target.linkerFlags, 			dependency.linkerFlags, 		private);
 
-		merge(target.includeDirectories, toTarget.includeDirectories, private, resolvePath);
-		merge(target.linkerDirectories, toTarget.linkerDirectories, private, resolvePath);
-		merge(target.compilerFlags, toTarget.compilerFlags, private);
-		merge(target.definitions, toTarget.definitions, private);
-		merge(target.linkerFlags, toTarget.linkerFlags, private);
-
-		if (toTarget.type === TargetType.StaticLibrary)
+		if (dependency.type === TargetType.StaticLibrary)
 		{
-			const p = generator.predictOutputPath(toTarget);
+			const p = generator.predictOutputPath(dependency);
 
 			target.link.push(p);
 		}
@@ -99,23 +149,22 @@ function link(target, toTarget, generator, private = true)
 }
 
 
-function loadBuildScript(path, additionalPath = undefined)
+/**
+ * Loads build script and makes every loaded project conformant to CppBuild format.
+ * @param {*} path					- path to the script
+ * @param {*} additionalSearchDir 	- additional search directory
+ * @returns 
+ */
+function loadBuildScript(path, additionalSearchDir = undefined)
 {
-	let resolved;
-	try {
-		let paths;
-		if (additionalPath !== undefined)
-			paths = [additionalPath, ...module.paths];
-		else
-			paths = module.paths;
+	// Gather paths that should be searched:
+	const paths = module.paths;
 
-		resolved = require.resolve(path, { paths: paths });
-	}
-	catch(exc) {
-		throw exc;
-	}
+	if (additionalSearchDir !== undefined)
+		paths.unshift(additionalSearchDir);
 
-	const script = require(resolved);
+	const resolved 	= require.resolve(path, { paths: paths });
+	const script 	= require(resolved);
 	
 	applyScriptPath(script, resolved);
 
@@ -129,16 +178,35 @@ function loadBuildScript(path, additionalPath = undefined)
 	return script;
 }
 
-function flatten2dArray(array2d)
+/**
+ * Detects which projects can be build in the next step.
+ * Passes only projects that does not depend on other projects from the `pendingProjects`.
+ * @param {*} pendingProjects - projects that were not passed to build in previous step.
+ * @returns Array of buildable projects in the next step.
+ */
+function findBuildableProjects(pendingProjects)
 {
-	const flattenedArray = [];
+	const buildable = [];
 
-	for(const a of array2d)
+	for(const project of pendingProjects)
 	{
-		flattenedArray.push(...a);
+		let ready = true;
+		for(const dep of project.dependsOn)
+		{
+			if (pendingProjects.indexOf(dep) != -1)
+			{
+				ready = false;
+				break;
+			}
+		}
+
+		if (ready)
+		{
+			buildable.push(project);
+		}
 	}
 
-	return flattenedArray;
+	return buildable;
 }
 
 class CppBuildEngine
@@ -175,7 +243,7 @@ class CppBuildEngine
 
 		while(pendingProjects.length > 0)
 		{
-			const nextStep = this.findBuildableProjects(pendingProjects);
+			const nextStep = findBuildableProjects(pendingProjects);
 
 			if (nextStep.length == 0)
 				throw "cyclic dependency found when setting up build queue";
@@ -192,30 +260,7 @@ class CppBuildEngine
 		return buildQueue;
 	}
 
-	findBuildableProjects(pendingProjects)
-	{
-		const buildable = [];
-
-		for(const project of pendingProjects)
-		{
-			let ready = true;
-			for(const dep of project.dependsOn)
-			{
-				if (pendingProjects.indexOf(dep) != -1)
-				{
-					ready = false;
-					break;
-				}
-			}
-
-			if (ready)
-			{
-				buildable.push(project);
-			}
-		}
-
-		return buildable;
-	}
+	
 
 	generateBuildFiles(target, generator)
 	{

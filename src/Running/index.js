@@ -25,6 +25,7 @@ function runBuild(args)
 	catch(exc)
 	{
 		console.error(`Error: Details:\n${exc}`);
+		console.error("Stack trace:\n", exc.stack);
 		console.error("# cpp-build process finished (failure)");
 	}
 }
